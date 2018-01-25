@@ -102,7 +102,6 @@ for ($page = 0; $page <= 44680; $page+=40) {
 						"message" => rstr(500)
 					]);
 					$postContext['subject'] = $subject;
-					print "Sending reply...\n";
 					$ch = new Curl($url, $cookie);
 					$opt = [
 						CURLOPT_POST => true,
@@ -116,13 +115,14 @@ for ($page = 0; $page <= 44680; $page+=40) {
 						$opt[CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS4;
 					}
 					$opt[CURLOPT_PROXY] = $socks[$socksOffset]['socks'];
+					print "Sending reply with socks ".$opt[CURLOPT_PROXY]." ...\n";
 					unset($socks[$socksOffset]);
 					$socksOffset++;
 					$ch->setOpt($opt);
 					$out = $ch->exec();
 					if ($err = preg_match('/The last posting from your IP was less than 360 seconds ago./Ui', $out) or $err = $ch->error()) {
 						errorQ();
-						print "Error! ".($err === 1 ? freshSocks($opt[CURLOPT_PROXY])."The last posting from your IP was less than 360 seconds ago." : $err)."\n\n";
+						print "Error! ".($err === 1 ? fresh($opt[CURLOPT_PROXY])."The last posting from your IP was less than 360 seconds ago." : $err)."\n\n";
 					} else {
 						successQ($opt[CURLOPT_PROXY]);
 						print "Success!\n\n";
