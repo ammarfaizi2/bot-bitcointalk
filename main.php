@@ -52,7 +52,6 @@ for ($page = 0; $page <= 44680; $page+=40) {
 						"version" => $matches[3][$key]
 					];
 				}
-				shuffle($socks);
 			}
 
 			print "Opening $val ...\n";
@@ -125,7 +124,7 @@ for ($page = 0; $page <= 44680; $page+=40) {
 						errorQ();
 						print "Error! ".($err === 1 ? "The last posting from your IP was less than 360 seconds ago." : $err)."\n\n";
 					} else {
-						successQ();
+						successQ($opt[CURLOPT_PROXY]);
 						print "Success!\n\n";
 					}
 					$ch->close();
@@ -158,9 +157,10 @@ function errorQ()
 	$a['error']++;
 	file_put_contents($logs, json_encode($a, 128));
 }
-function successQ()
+function successQ($freshSocks = "")
 {
 	global $logs;
+	empty($freshSocks) or file_put_contents('fresh_socks.txt', $freshSocks."\n", FILE_APPEND);
 	$a = json_decode(file_get_contents($logs), true);
 	if (! isset($a['success'])) {
 		$a['success'] = 0;
