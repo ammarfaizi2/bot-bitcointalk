@@ -21,7 +21,6 @@ for ($page = 0; $page <= 44680; $page+=40) {
 				"version" => $matches[3][$key]
 			];
 		}
-		shuffle($socks);
 	}
 
 	print "Scanning thread ".($url = "https://bitcointalk.org/index.php?board=1.".$page)." ...\n\n\n";
