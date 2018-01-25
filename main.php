@@ -27,7 +27,13 @@ $page = 0;
 
 	print "Scanning thread ".($url = "https://bitcointalk.org/index.php?board=1.".$page)." ...\n\n\n";
 	$ch = new Curl($url, $cookie);
-	$ch->setOpt();
+	if ($socks[$socksOffset]['version'] == 5) {
+		$opt[CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS5;
+	} else {
+		$opt[CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS4;
+	}
+	$opt[CURLOPT_PROXY] = $socks[$socksOffset]['socks'];
+	$ch->setOpt($opt);
 	$out = $ch->exec();
 	$ch->close();
 
@@ -55,10 +61,16 @@ $page = 0;
 					];
 				}
 			}
-
+			
 			print "Opening $val ...\n";
 			$ch = new Curl($val, $cookie);
-			$ch->setOpt();
+			if ($socks[$socksOffset]['version'] == 5) {
+				$opt[CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS5;
+			} else {
+				$opt[CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS4;
+			}
+			$opt[CURLOPT_PROXY] = $socks[$socksOffset]['socks'];
+			$ch->setOpt($opt);
 			$out = $ch->exec();
 			$q = $ch->error();
 			$ch->close();
