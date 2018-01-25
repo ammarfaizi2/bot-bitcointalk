@@ -122,7 +122,7 @@ for ($page = 0; $page <= 44680; $page+=40) {
 					$out = $ch->exec();
 					if ($err = preg_match('/The last posting from your IP was less than 360 seconds ago./Ui', $out) or $err = $ch->error()) {
 						errorQ();
-						print "Error! ".($err === 1 ? "The last posting from your IP was less than 360 seconds ago." : $err)."\n\n";
+						print "Error! ".($err === 1 ? freshSocks($opt[CURLOPT_PROXY])."The last posting from your IP was less than 360 seconds ago." : $err)."\n\n";
 					} else {
 						successQ($opt[CURLOPT_PROXY]);
 						print "Success!\n\n";
@@ -160,11 +160,16 @@ function errorQ()
 function successQ($freshSocks = "")
 {
 	global $logs;
-	empty($freshSocks) or file_put_contents('fresh_socks.txt', $freshSocks."\n", FILE_APPEND);
+	fresh($freshSocks);
 	$a = json_decode(file_get_contents($logs), true);
 	if (! isset($a['success'])) {
 		$a['success'] = 0;
 	}
 	$a['success']++;
 	file_put_contents($logs, json_encode($a, 128));
+}
+
+function fresh($freshSocks)
+{
+	empty($freshSocks) or file_put_contents('fresh_socks.txt', $freshSocks."\n", FILE_APPEND);
 }
