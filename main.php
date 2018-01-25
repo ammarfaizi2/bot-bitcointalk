@@ -3,6 +3,7 @@
 require __DIR__ . '/autoloader.php';
 
 $socks = [];
+$socksOffset = 0;
 $cookie = file_get_contents(__DIR__.'/cookie.txt');
 $logs = __DIR__.'/logs.json';
 
@@ -113,6 +114,23 @@ for ($page = 0; $page <= 44680; $page+=40) {
 						$opt[CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS5;
 					} else {
 						$opt[CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS4;
+					}
+					if (! isset($socks[$socksOffset])) {
+						if (! count($socks)) {
+							print "Generating socks ".($url = "https://www.socks-proxy.net/")." ...\n";
+							$ch = new Curl($url, $cookie);
+							$ch->setOpt();
+							$out = $ch->exec();
+							$ch->close();
+							preg_match_all('/<tr><td>([\d\.]{4,12})<\/td><td>([\d]{1,10})<\/td>.+<td>Socks(.*)<\/td>.+<\/tr>/Usi', $out, $matches);
+							$socksOffset = 0;
+							foreach ($matches[1] as $key => $val) {
+								$socks[] = [
+									"socks" => $val.":".$matches[2][$key],
+									"version" => $matches[3][$key]
+								];
+							}
+						}
 					}
 					$opt[CURLOPT_PROXY] = $socks[$socksOffset]['socks'];
 					print "Sending reply with socks ".$opt[CURLOPT_PROXY]." ...\n";
