@@ -31,8 +31,8 @@ for ($page = 0; $page <= 44680; $page+=40) {
 	$ch->close();
 
 	//file_put_contents('b.tmp', $out);
-
-	$out = file_get_contents('b.tmp');
+	//$out = file_get_contents('b.tmp');
+	
 	preg_match_all('/href="(https:\/\/bitcointalk.org\/index.php\?topic=[\d\.]+)"/Usi', $out, $matches);
 
 	if (isset($matches[1]) && count($matches[1])) {
