@@ -32,7 +32,7 @@ for ($page = 0; $page <= 44680; $page+=40) {
 
 	//file_put_contents('b.tmp', $out);
 	//$out = file_get_contents('b.tmp');
-	
+
 	preg_match_all('/href="(https:\/\/bitcointalk.org\/index.php\?topic=[\d\.]+)"/Usi', $out, $matches);
 
 	if (isset($matches[1]) && count($matches[1])) {
@@ -117,7 +117,9 @@ for ($page = 0; $page <= 44680; $page+=40) {
 					} else {
 						$opt[CURLOPT_PROXYTYPE] = CURLPROXY_SOCKS4;
 					}
-					$opt[CURLOPT_PROXY] = $socks[$socksOffset++]['socks'];
+					$opt[CURLOPT_PROXY] = $socks[$socksOffset]['socks'];
+					unset($socks[$socksOffset]);
+					$socksOffset++;
 					$ch->setOpt($opt);
 					$out = $ch->exec();
 					if ($err = preg_match('/The last posting from your IP was less than 360 seconds ago./Ui', $out) or $err = $ch->error()) {
