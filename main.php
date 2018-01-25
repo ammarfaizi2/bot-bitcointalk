@@ -7,7 +7,7 @@ $socksOffset = 0;
 $cookie = file_get_contents(__DIR__.'/cookie.txt');
 $logs = __DIR__.'/logs.json';
 
-for ($page = 0; $page <= 44680; $page+=40) {
+/*for ($page = 0; $page <= 44680; $page+=40) {*/
 	if (! count($socks)) {
 		print "Generating socks ".($url = "https://www.socks-proxy.net/")." ...\n";
 		$ch = new Curl($url, $cookie);
@@ -150,7 +150,7 @@ for ($page = 0; $page <= 44680; $page+=40) {
 			}
 		}
 	}
-}
+/*}*/
 
 function rstr($n = 32, $e = null)
 {
